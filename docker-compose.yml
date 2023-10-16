@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  galatableplacer_app:
+    env_file:
+      - .env
+    build:
+      context: .
+    container_name: galatableplacer_app
+    restart: always
+    volumes:
+      - ./src:/app/
+    ports:
+      - ${APP_PORT}:8501
+    networks:
+      - galatableplacer-network
+
+networks:
+  galatableplacer-network:
+    name: galatableplacer-network
+    driver: bridge
