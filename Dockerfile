@@ -1,16 +1,16 @@
-FROM python:3.8-slim-buster
+FROM python:3.9-bullseye
 
 # UPDATE
-RUN pip install --upgrade pip
 RUN apt-get update -y
 RUN apt-get upgrade -y
+RUN pip install --upgrade pip
 
 
 # DEPENDENCIES
 WORKDIR /
 
 COPY requirements.txt /requirements.txt
-RUN pip install -r /requirements.txt --default-timeout=100
+RUN pip install -r /requirements.txt
 
 
 RUN mkdir ~/.streamlit
@@ -18,6 +18,5 @@ COPY .streamlit .streamlit
 RUN cp .streamlit/* ~/.streamlit/
 
 # START
-EXPOSE 8501
 ENTRYPOINT ["streamlit", "run"]
 CMD ["/app/main.py"]

@@ -1,3 +1,5 @@
-streamlit==1.25.*
+
 pandas
 numpy
+
+streamlit==1.25.*
