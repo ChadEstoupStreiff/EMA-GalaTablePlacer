@@ -12,11 +12,6 @@ WORKDIR /
 COPY requirements.txt /requirements.txt
 RUN pip install -r /requirements.txt
 
-
-RUN mkdir ~/.streamlit
-COPY .streamlit .streamlit
-RUN cp .streamlit/* ~/.streamlit/
-
 # START
 ENTRYPOINT ["streamlit", "run"]
 CMD ["/app/main.py"]
