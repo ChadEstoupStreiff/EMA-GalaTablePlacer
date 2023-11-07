@@ -1,6 +1,4 @@
 import streamlit as st
-import time
-from stqdm import stqdm
 
 
 def transform_to_tables(entries):
@@ -144,9 +142,6 @@ def solve_placement(entries, table_size: int = 10):
         tables = split_tables(tables, table_size)
         tables = merge_tables(tables, table_size)
         tables = place_people(tables, entries)
-
-    for _ in stqdm(range(10)):
-        time.sleep(0.01)
     return tables
 
 
@@ -167,4 +162,3 @@ def solve_placement(entries, table_size: int = 10):
 
 # def get_group(tables, table):
 #     return [sub_code for code in table["codes"] for sub_code in get_group_codes(tables, code[0])]
-    

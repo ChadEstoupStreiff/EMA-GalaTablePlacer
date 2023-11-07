@@ -1,8 +1,10 @@
 import streamlit as st
-from loaders.excels import process_excel
-from calculators.basic import solve_placement
+from loaders import process_excel
+from calculators import solve_placement
 import statistics
 import json
+from tables import load_tables, get_solution
+
 
 def metrics():
     cols = st.columns([1, 1, 1, 1])
@@ -10,12 +12,12 @@ def metrics():
         st.metric("Number of tables", len(st.session_state.result))
     with cols[1]:
         st.metric(
-            "Minimum size",
+            "Minimum table size",
             min([table["size"] for table in st.session_state.result]),
         )
     with cols[2]:
         st.metric(
-            "Average size",
+            "Average table size",
             int(
                 statistics.mean(
                     [float(table["size"]) for table in st.session_state.result]
@@ -26,7 +28,7 @@ def metrics():
         )
     with cols[3]:
         st.metric(
-            "Median size",
+            "Median table size",
             int(
                 statistics.median(
                     [float(table["size"]) for table in st.session_state.result]
@@ -39,8 +41,8 @@ def metrics():
     cols = st.columns([1, 1, 1, 1])
     with cols[0]:
         st.metric(
-            "Numner of seats",
-            sum([table["size"] for table in st.session_state.result]),
+            "Solution score",
+            st.session_state.score,
         )
     with cols[1]:
         st.metric(
@@ -69,6 +71,7 @@ def metrics():
             )
             / 1000,
         )
+
 
 def people_searcher():
     person = st.selectbox(
@@ -103,6 +106,7 @@ def table_searcher():
 def show_table(table, expanded=True):
     with st.expander(f"Table {table['id']}", expanded=expanded):
         st.markdown(f"## Table {table['id']} - {table['size']} seats")
+        st.markdown(f"#### Coordinates: {table['coord'][0]}, {table['coord'][1]}")
         st.markdown(f"#### {len(table['codes'])} code(s):")
         for code in table["codes"]:
             st.markdown(f"- {code[0]} - {code[1]} people")
@@ -223,6 +227,9 @@ def main():
         with sidebar_top:
             with st.form("generate"):
                 table_size = st.number_input("Size of a table", min_value=1, value=10)
+                nbr_of_sol = st.number_input(
+                    "number of solution to try", min_value=1, value=100000
+                )
 
                 calculate_button = st.form_submit_button(
                     "Calculate table placement", use_container_width=True
@@ -232,6 +239,10 @@ def main():
                 st.session_state.result = solve_placement(
                     file_edited, table_size=table_size
                 )
+                physical_tables = load_tables()
+                st.session_state.result, st.session_state.score = get_solution(
+                    st.session_state.result, physical_tables, nbr_of_sol
+                )
             sidebar_bottom.success("Table placement solved")
     else:
         if st.session_state.result is None:
@@ -240,8 +251,13 @@ def main():
     if st.session_state.result is not None:
         with top:
             if sidebar_top.checkbox("Show metrics", value=True):
+                st.divider()
                 metrics()
-            
+
+            # if sidebar_top.checkbox("Show solution", value=True):
+            #     st.divider()
+            #     st.json(st.session_state.sol[0])
+
             if sidebar_top.checkbox("Show people and table search", value=True):
                 st.divider()
                 c1, c2 = st.columns([1, 1])
