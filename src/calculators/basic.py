@@ -148,3 +148,23 @@ def solve_placement(entries, table_size: int = 10):
     for _ in stqdm(range(10)):
         time.sleep(0.01)
     return tables
+
+
+# def get_group_codes(tables, code, to_ignore=None):
+#     if to_ignore is None:
+#         to_ignore = []
+
+#     all_codes = [code,]
+#     for table in tables:
+#         if code in [code[0] for code in table["codes"]]:
+#             for friend in table["friends"]:
+#                 if friend not in to_ignore:
+#                     to_ignore.append(friend)
+
+#                     all_codes.extend(get_group_codes(tables, friend, to_ignore=to_ignore))
+
+#     return all_codes
+
+# def get_group(tables, table):
+#     return [sub_code for code in table["codes"] for sub_code in get_group_codes(tables, code[0])]
+    

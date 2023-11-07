@@ -4,6 +4,71 @@ from calculators.basic import solve_placement
 import statistics
 import json
 
+def metrics():
+    cols = st.columns([1, 1, 1, 1])
+    with cols[0]:
+        st.metric("Number of tables", len(st.session_state.result))
+    with cols[1]:
+        st.metric(
+            "Minimum size",
+            min([table["size"] for table in st.session_state.result]),
+        )
+    with cols[2]:
+        st.metric(
+            "Average size",
+            int(
+                statistics.mean(
+                    [float(table["size"]) for table in st.session_state.result]
+                )
+                * 1000
+            )
+            / 1000,
+        )
+    with cols[3]:
+        st.metric(
+            "Median size",
+            int(
+                statistics.median(
+                    [float(table["size"]) for table in st.session_state.result]
+                )
+                * 1000
+            )
+            / 1000,
+        )
+
+    cols = st.columns([1, 1, 1, 1])
+    with cols[0]:
+        st.metric(
+            "Numner of seats",
+            sum([table["size"] for table in st.session_state.result]),
+        )
+    with cols[1]:
+        st.metric(
+            "Maximum nbr of friends",
+            max([len(table["friends"]) for table in st.session_state.result]),
+        )
+    with cols[2]:
+        st.metric(
+            "Average number of friends",
+            int(
+                statistics.mean(
+                    [len(table["friends"]) for table in st.session_state.result]
+                )
+                * 1000
+            )
+            / 1000,
+        )
+    with cols[3]:
+        st.metric(
+            "Median number of friends",
+            int(
+                statistics.median(
+                    [len(table["friends"]) for table in st.session_state.result]
+                )
+                * 1000
+            )
+            / 1000,
+        )
 
 def people_searcher():
     person = st.selectbox(
@@ -19,9 +84,32 @@ def people_searcher():
     for table in st.session_state.result:
         for code in table["codes"]:
             if person in code[2]:
-                st.subheader(f"Table {table['id']}")
-                st.json(table, expanded=False)
+                show_table(table)
                 return
+
+
+def table_searcher():
+    table_id = st.selectbox(
+        "Table",
+        [table["id"] for table in st.session_state.result],
+    )
+
+    for table in st.session_state.result:
+        if table["id"] == table_id:
+            show_table(table)
+            return
+
+
+def show_table(table, expanded=True):
+    with st.expander(f"Table {table['id']}", expanded=expanded):
+        st.markdown(f"## Table {table['id']} - {table['size']} seats")
+        st.markdown(f"#### {len(table['codes'])} code(s):")
+        for code in table["codes"]:
+            st.markdown(f"- {code[0]} - {code[1]} people")
+            st.json(code[2])
+        st.markdown(f"#### {len(table['friends'])} friend(s):")
+        for friend in table["friends"]:
+            st.markdown(f"- {friend}")
 
 
 def setup():
@@ -102,7 +190,7 @@ def main():
 
     top = st.container()
     if st.session_state.file_processed is not None:
-        with st.expander("Excel Entries"):
+        with st.expander("Excel Entries", expanded=True):
             cols = st.columns([1, 1, 1, 1])
 
             file_edited = st.data_editor(
@@ -146,79 +234,41 @@ def main():
                 )
             sidebar_bottom.success("Table placement solved")
     else:
-        st.error("Please load a file")
+        if st.session_state.result is None:
+            st.error("Please load a file")
 
     if st.session_state.result is not None:
         with top:
-            cols = st.columns([1, 1, 1, 1])
-            with cols[0]:
-                st.metric("Number of tables", len(st.session_state.result))
-            with cols[1]:
-                st.metric(
-                    "Minimum size",
-                    min([table["size"] for table in st.session_state.result]),
-                )
-            with cols[2]:
-                st.metric(
-                    "Average size",
-                    int(
-                        statistics.mean(
-                            [float(table["size"]) for table in st.session_state.result]
-                        )
-                        * 1000
-                    )
-                    / 1000,
-                )
-            with cols[3]:
-                st.metric(
-                    "Median size",
-                    int(
-                        statistics.median(
-                            [float(table["size"]) for table in st.session_state.result]
-                        )
-                        * 1000
-                    )
-                    / 1000,
-                )
+            if sidebar_top.checkbox("Show metrics", value=True):
+                metrics()
+            
+            if sidebar_top.checkbox("Show people and table search", value=True):
+                st.divider()
+                c1, c2 = st.columns([1, 1])
+                with c1:
+                    people_searcher()
+                with c2:
+                    table_searcher()
 
-            cols = st.columns([1, 1, 1, 1])
-            with cols[0]:
-                st.metric(
-                    "Numner of seats",
-                    sum([table["size"] for table in st.session_state.result]),
-                )
-            with cols[1]:
-                st.metric(
-                    "Maximum nbr of friends",
-                    max([len(table["friends"]) for table in st.session_state.result]),
-                )
-            with cols[2]:
-                st.metric(
-                    "Average number of friends",
-                    int(
-                        statistics.mean(
-                            [len(table["friends"]) for table in st.session_state.result]
-                        )
-                        * 1000
-                    )
-                    / 1000,
-                )
-            with cols[3]:
-                st.metric(
-                    "Median number of friends",
-                    int(
-                        statistics.median(
-                            [len(table["friends"]) for table in st.session_state.result]
-                        )
-                        * 1000
-                    )
-                    / 1000,
-                )
+            if sidebar_top.checkbox("Show all Tables", value=False):
+                st.divider()
+                for i in range(int(len(st.session_state.result) / 3) + 1):
+                    c1, c2, c3 = st.columns(3)
+                    if i * 3 < len(st.session_state.result):
+                        with c1:
+                            show_table(st.session_state.result[i * 3], expanded=False)
+                    if i * 3 + 1 < len(st.session_state.result):
+                        with c2:
+                            show_table(
+                                st.session_state.result[i * 3 + 1], expanded=False
+                            )
+                    if i * 3 + 2 < len(st.session_state.result):
+                        with c3:
+                            show_table(
+                                st.session_state.result[i * 3 + 2], expanded=False
+                            )
 
-            st.divider()
-            people_searcher()
-
-            if sidebar_top.checkbox("Show JSONs"):
+            if sidebar_top.checkbox("Show raw JSONs"):
                 st.divider()
                 st.subheader("Tables JSON")
                 st.json(
@@ -232,8 +282,6 @@ def main():
                 file_name="tables.json",
                 use_container_width=True,
             )
-
-            st.divider()
 
 
 if __name__ == "__main__":
