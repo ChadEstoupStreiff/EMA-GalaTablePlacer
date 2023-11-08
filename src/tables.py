@@ -10,6 +10,8 @@ import math
 from stqdm import stqdm
 
 
+__SOURCES = "/app"
+
 def draw_physical_tables(draw, image_scale, tables):
     for table in tables:
         draw.rectangle(
@@ -35,7 +37,7 @@ def draw_tables(draw, image_scale, tables, show_name):
             fill="#ffff33",
         )
         if show_name:
-            fnt = ImageFont.truetype("/app/font.ttf", 40)
+            fnt = ImageFont.truetype(os.path.join(__SOURCES, "font.ttf"), 40)
             draw.text(
                 (
                     image_scale * table["coord"][0] + image_scale,
@@ -72,9 +74,9 @@ def draw_solution(
             ),
             fill="#FE0102",
         )
-    if not os.path.exists("/app/images"):
-        os.makedirs("/app/images")
-    im.save(os.path.join("/app/images", path))
+    if not os.path.exists(os.path.join(__SOURCES, "images")):
+        os.makedirs(os.path.join(__SOURCES, "images"))
+    im.save(os.path.join(os.path.join(__SOURCES, "images"), path))
 
 
 def get_distance(A, B):
@@ -82,7 +84,7 @@ def get_distance(A, B):
 
 
 def load_tables():
-    with open("/app/tables.json", "r") as f_i:
+    with open(os.path.join(__SOURCES, "tables.json"), "r") as f_i:
         tables = json.loads(f_i.read())
     return tables
 

@@ -3,8 +3,11 @@ from loaders import process_excel
 from calculators import solve_placement
 import statistics
 import json
+import os
 from tables import load_tables, get_solution, draw_solution
 
+
+__SOURCES = "/app"
 
 def metrics():
     cols = st.columns([1, 1, 1, 1])
@@ -107,7 +110,7 @@ def show_table(table, expanded=True):
     draw_solution(st.session_state.result, st.session_state.physical_tables, table=table, path="table.png")
     with st.expander(f"Table {table['id']}", expanded=expanded):
         st.markdown(f"## Table {table['id']} - {table['size']} seats")
-        st.image("/app/images/table.png")
+        st.image(os.path.join(__SOURCES, "images/table.png"))
         st.markdown(f"#### Coordinates: {table['coord'][0]}, {table['coord'][1]}")
         st.markdown(f"#### {len(table['codes'])} code(s):")
         for code in table["codes"]:
@@ -258,7 +261,7 @@ def main():
 
     if st.session_state.result is not None:
         with top:
-            st.image("/app/images/solution.png")
+            st.image(os.path.join(__SOURCES, "images/solution.png"))
 
             if sidebar_top.checkbox("Show metrics", value=True):
                 st.divider()

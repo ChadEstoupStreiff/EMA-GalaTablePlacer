@@ -12,6 +12,8 @@ WORKDIR /
 COPY requirements.txt /requirements.txt
 RUN pip install -r /requirements.txt
 
+# APP
+
 # START
 ENTRYPOINT ["streamlit", "run"]
 CMD ["/app/main.py"]
