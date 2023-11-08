@@ -192,6 +192,7 @@ def main():
             sidebar_bottom.success("File loaded")
 
     if st.session_state.result_file_changed and result_file:
+        st.session_state.result_file_changed = False
         save = json.loads(result_file.getvalue().decode("utf-8"))
         st.session_state.score = save[0]
         st.session_state.physical_tables = save[1]
