@@ -48,8 +48,8 @@ def draw_solution(
     im = Image.new(
         "RGB",
         (
-            image_scale * (max([table[0] for table in physical_tables]) + 1),
-            image_scale * (max([table[1] for table in physical_tables]) + 1),
+            image_scale * (max([table[0] for table in physical_tables]) + 3),
+            image_scale * (max([table[1] for table in physical_tables]) + 3),
         ),
         (100, 100, 100),
     )

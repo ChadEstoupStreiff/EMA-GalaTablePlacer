@@ -31,7 +31,7 @@ def get_score(tables, physical_table):
                 for code in tableB["codes"]:
                     if code[0] in tableA["friends"]:
                         nbr_friend += 1
-                        if get_distance(physical_table[i], physical_table[j]) < 3:
+                        if get_distance(physical_table[i], physical_table[j]) < 3.5:
                             in_distance_friend += 1
                         break
         if nbr_friend > 0:
