@@ -1,10 +1,11 @@
 import streamlit as st
-from loaders import process_excel
-from calculators import solve_placement
+from loader import process_excel
+from caster import solve_placement
 import statistics
 import json
 import os
-from tables import load_tables, get_solution, draw_solution
+from solver import load_tables, get_solution
+from drawer import draw_solution
 
 
 __SOURCES = "/app"
