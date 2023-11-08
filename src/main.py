@@ -3,7 +3,7 @@ from loaders import process_excel
 from calculators import solve_placement
 import statistics
 import json
-from tables import load_tables, get_solution
+from tables import load_tables, get_solution, draw_solution
 
 
 def metrics():
@@ -104,8 +104,10 @@ def table_searcher():
 
 
 def show_table(table, expanded=True):
+    draw_solution(st.session_state.result, st.session_state.physical_tables, table=table, path="table.png")
     with st.expander(f"Table {table['id']}", expanded=expanded):
         st.markdown(f"## Table {table['id']} - {table['size']} seats")
+        st.image("/app/images/table.png")
         st.markdown(f"#### Coordinates: {table['coord'][0]}, {table['coord'][1]}")
         st.markdown(f"#### {len(table['codes'])} code(s):")
         for code in table["codes"]:
@@ -130,6 +132,7 @@ def setup():
         st.session_state.result_file_changed = False
         st.session_state.file_processed = None
         st.session_state.result = None
+        st.session_state.physical_tables = load_tables()
 
     hide_streamlit_style = """
     <style>
@@ -189,8 +192,12 @@ def main():
             sidebar_bottom.success("File loaded")
 
     if st.session_state.result_file_changed and result_file:
-        st.session_state.result = json.loads(result_file.getvalue().decode("utf-8"))
-        sidebar_bottom.success("Result Loaded")
+        save = json.loads(result_file.getvalue().decode("utf-8"))
+        st.session_state.score = save[0]
+        st.session_state.physical_tables = save[1]
+        st.session_state.result = save[2]
+        draw_solution(st.session_state.result, st.session_state.physical_tables, path="solution.png", show_names=True)
+        sidebar_bottom.success("Save Loaded")
 
     top = st.container()
     if st.session_state.file_processed is not None:
@@ -239,10 +246,10 @@ def main():
                 st.session_state.result = solve_placement(
                     file_edited, table_size=table_size
                 )
-                physical_tables = load_tables()
                 st.session_state.result, st.session_state.score = get_solution(
-                    st.session_state.result, physical_tables, nbr_of_sol
+                    st.session_state.result, st.session_state.physical_tables, nbr_of_sol
                 )
+                draw_solution(st.session_state.result, st.session_state.physical_tables, path="solution.png", show_names=True)
             sidebar_bottom.success("Table placement solved")
     else:
         if st.session_state.result is None:
@@ -250,13 +257,11 @@ def main():
 
     if st.session_state.result is not None:
         with top:
+            st.image("/app/images/solution.png")
+
             if sidebar_top.checkbox("Show metrics", value=True):
                 st.divider()
                 metrics()
-
-            # if sidebar_top.checkbox("Show solution", value=True):
-            #     st.divider()
-            #     st.json(st.session_state.sol[0])
 
             if sidebar_top.checkbox("Show people and table search", value=True):
                 st.divider()
@@ -294,7 +299,11 @@ def main():
 
             sidebar_top.download_button(
                 "Download results",
-                json.dumps(st.session_state.result),
+                json.dumps([
+                    st.session_state.score,
+                    st.session_state.physical_tables,
+                    st.session_state.result
+                ]),
                 file_name="tables.json",
                 use_container_width=True,
             )
