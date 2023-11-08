@@ -6,9 +6,7 @@ import streamlit as st
 import os
 import math
 from stqdm import stqdm
-
-
-__SOURCES = "/app"
+from config import __SOURCES
 
 
 def get_distance(A, B):

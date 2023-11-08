@@ -6,9 +6,7 @@ import json
 import os
 from solver import load_tables, get_solution
 from drawer import draw_solution
-
-
-__SOURCES = "/app"
+from config import __SOURCES
 
 
 def metrics():
@@ -250,8 +248,9 @@ def main():
         with sidebar_top:
             with st.form("generate"):
                 table_size = st.number_input("Size of a table", min_value=1, value=10)
+                splitted_equaly = st.checkbox("Equaly split overfilled tables", value=True)
                 nbr_of_sol = st.number_input(
-                    "number of solution to try", min_value=1, value=100000
+                    "Number of solution to try", min_value=1, value=100000
                 )
 
                 calculate_button = st.form_submit_button(
@@ -260,7 +259,7 @@ def main():
         if calculate_button:
             with sidebar_bottom:
                 st.session_state.result = solve_placement(
-                    file_edited, table_size=table_size
+                    file_edited, table_size=table_size, splitted_equaly=splitted_equaly
                 )
                 st.session_state.result, st.session_state.score = get_solution(
                     st.session_state.result,

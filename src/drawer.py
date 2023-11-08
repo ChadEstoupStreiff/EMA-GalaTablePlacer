@@ -1,7 +1,7 @@
 from PIL import Image, ImageDraw, ImageFont
 import os
 
-__SOURCES = "/app"
+from config import __SOURCES
 
 
 def draw_physical_tables(draw, image_scale, tables):

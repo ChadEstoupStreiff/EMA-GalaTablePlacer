@@ -8,8 +8,8 @@ services:
       context: .
     container_name: galatableplacer_app
     restart: always
-    # volumes:
-    #   - ./src:/app/
+    volumes:
+      - ./src:/app/
     ports:
       - ${APP_PORT}:8501
     networks:

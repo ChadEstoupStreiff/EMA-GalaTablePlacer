@@ -26,31 +26,47 @@ def transform_to_tables(entries):
     ]
 
 
-def split_tables(tables, table_size: int):
+def split_tables(tables, table_size: int, splitted_equaly):
     tables_new = []
     for table in tables:
         if table["size"] > table_size:
-            n = int(table["size"] / table_size)
-            for _ in range(n):
-                tables_new.append(
-                    {
-                        "id": f"T{len(tables_new) + 1}",
-                        "size": table_size,
-                        "codes": [[table["codes"][0][0], int(table_size)]],
-                        "friends": table["friends"],
-                    }
-                )
-            if int(table["size"] % table_size) > 0:
-                tables_new.append(
-                    {
-                        "id": f"T{len(tables_new) + 1}",
-                        "size": int(table["size"] % table_size),
-                        "codes": [
-                            [table["codes"][0][0], int(table["size"] % table_size)]
-                        ],
-                        "friends": table["friends"],
-                    }
-                )
+            if splitted_equaly:
+                n = int((table["size"] + table_size - 1) / table_size)
+                for i in range(n):
+                    n_seats = sum(
+                        [1 if j % n == i else 0 for j in range(table["size"])]
+                    )
+
+                    tables_new.append(
+                        {
+                            "id": f"T{len(tables_new) + 1}",
+                            "size": n_seats,
+                            "codes": [[table["codes"][0][0], n_seats]],
+                            "friends": table["friends"],
+                        }
+                    )
+            else:
+                n = int(table["size"] / table_size)
+                for _ in range(n):
+                    tables_new.append(
+                        {
+                            "id": f"T{len(tables_new) + 1}",
+                            "size": table_size,
+                            "codes": [[table["codes"][0][0], int(table_size)]],
+                            "friends": table["friends"],
+                        }
+                    )
+                if int(table["size"] % table_size) > 0:
+                    tables_new.append(
+                        {
+                            "id": f"T{len(tables_new) + 1}",
+                            "size": int(table["size"] % table_size),
+                            "codes": [
+                                [table["codes"][0][0], int(table["size"] % table_size)]
+                            ],
+                            "friends": table["friends"],
+                        }
+                    )
         else:
             tables_new.append(
                 {
@@ -137,10 +153,10 @@ def place_people(tables, entries):
     return tables
 
 
-def solve_placement(entries, table_size: int = 10):
+def solve_placement(entries, table_size: int = 10, splitted_equaly=True):
     with st.spinner("Setup algorithme"):
         tables = transform_to_tables(entries)
-        tables = split_tables(tables, table_size)
+        tables = split_tables(tables, table_size, splitted_equaly)
         tables = merge_tables(tables, table_size)
         tables = place_people(tables, entries)
     return tables
