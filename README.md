@@ -15,7 +15,7 @@ In writing...
 The application will first load the data and will aplly filters to stabilalise them.
 - Column "Prénom" we will lower case the text and upper case the first letter.
 - Column "Nom" we will upper case the text
-- Column "Code table" to prevent code error from users, we will relace all the none values with "NOTABLE", next we will remove or replace accent and special caractere and upper case everything, finally we only keep letters and digits.
+- Column "Code table" to prevent code error from users, we will relace all the none or blacklisteds values with "NOTABLE", next we will remove or replace accent and special caractere and upper case everything, finally we only keep letters and digits.
 - Column "Code table ami" to prevent code error from users, we will remove or replace accent and special caractere and upper case everything, finally we only keep letters and digits.  
 
 The code is in [loaders.py](src/loaders.py).
