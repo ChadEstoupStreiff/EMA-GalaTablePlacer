@@ -162,3 +162,5 @@ cython_debug/
 /temp
 /ignore
 /.devcontainer
+
+/src/images
