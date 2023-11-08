@@ -12,6 +12,7 @@ from stqdm import stqdm
 
 __SOURCES = "/app"
 
+
 def draw_physical_tables(draw, image_scale, tables):
     for table in tables:
         draw.rectangle(

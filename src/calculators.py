@@ -80,17 +80,18 @@ def merge_tables(tables, table_size: int):
             )
 
         else:
-            all = [biggest]
+            all_tables = [biggest]
 
             has_found = True
             while has_found:
                 has_found = False
                 for i, table in enumerate(tables):
                     if (
-                        sum([table_all["size"] for table_all in all]) + table["size"]
+                        sum([table_all["size"] for table_all in all_tables])
+                        + table["size"]
                         <= table_size
                     ):
-                        all.append(table)
+                        all_tables.append(table)
                         del tables[i]
                         has_found = True
                         break
@@ -98,13 +99,13 @@ def merge_tables(tables, table_size: int):
             tables_new.append(
                 {
                     "id": f"T{len(tables_new) + 1}",
-                    "size": sum([table_all["size"] for table_all in all]),
-                    "codes": [table_all["codes"][0] for table_all in all],
+                    "size": sum([table_all["size"] for table_all in all_tables]),
+                    "codes": [table_all["codes"][0] for table_all in all_tables],
                     "friends": list(
                         set(
                             [
                                 friend
-                                for table_all in all
+                                for table_all in all_tables
                                 for friend in table_all["friends"]
                             ]
                         )

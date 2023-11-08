@@ -9,6 +9,7 @@ from tables import load_tables, get_solution, draw_solution
 
 __SOURCES = "/app"
 
+
 def metrics():
     cols = st.columns([1, 1, 1, 1])
     with cols[0]:
@@ -107,7 +108,12 @@ def table_searcher():
 
 
 def show_table(table, expanded=True):
-    draw_solution(st.session_state.result, st.session_state.physical_tables, table=table, path="table.png")
+    draw_solution(
+        st.session_state.result,
+        st.session_state.physical_tables,
+        table=table,
+        path="table.png",
+    )
     with st.expander(f"Table {table['id']}", expanded=expanded):
         st.markdown(f"## Table {table['id']} - {table['size']} seats")
         st.image(os.path.join(__SOURCES, "images/table.png"))
@@ -200,7 +206,12 @@ def main():
         st.session_state.score = save[0]
         st.session_state.physical_tables = save[1]
         st.session_state.result = save[2]
-        draw_solution(st.session_state.result, st.session_state.physical_tables, path="solution.png", show_names=True)
+        draw_solution(
+            st.session_state.result,
+            st.session_state.physical_tables,
+            path="solution.png",
+            show_names=True,
+        )
         sidebar_bottom.success("Save Loaded")
 
     top = st.container()
@@ -251,9 +262,16 @@ def main():
                     file_edited, table_size=table_size
                 )
                 st.session_state.result, st.session_state.score = get_solution(
-                    st.session_state.result, st.session_state.physical_tables, nbr_of_sol
+                    st.session_state.result,
+                    st.session_state.physical_tables,
+                    nbr_of_sol,
                 )
-                draw_solution(st.session_state.result, st.session_state.physical_tables, path="solution.png", show_names=True)
+                draw_solution(
+                    st.session_state.result,
+                    st.session_state.physical_tables,
+                    path="solution.png",
+                    show_names=True,
+                )
             sidebar_bottom.success("Table placement solved")
     else:
         if st.session_state.result is None:
@@ -303,11 +321,13 @@ def main():
 
             sidebar_top.download_button(
                 "Download results",
-                json.dumps([
-                    st.session_state.score,
-                    st.session_state.physical_tables,
-                    st.session_state.result
-                ]),
+                json.dumps(
+                    [
+                        st.session_state.score,
+                        st.session_state.physical_tables,
+                        st.session_state.result,
+                    ]
+                ),
                 file_name="tables.json",
                 use_container_width=True,
             )
