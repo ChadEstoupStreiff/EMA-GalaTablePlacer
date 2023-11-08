@@ -13,6 +13,7 @@ COPY requirements.txt /requirements.txt
 RUN pip install -r /requirements.txt
 
 # APP
+COPY src /app
 
 # START
 ENTRYPOINT ["streamlit", "run"]
