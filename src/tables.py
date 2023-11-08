@@ -37,7 +37,7 @@ def draw_tables(draw, image_scale, tables, show_name):
             fill="#ffff33",
         )
         if show_name:
-            fnt = ImageFont.truetype(os.path.join(__SOURCES, "font.ttf"), 40)
+            fnt = ImageFont.truetype(os.path.join(__SOURCES, "assets/font.ttf"), 40)
             draw.text(
                 (
                     image_scale * table["coord"][0] + image_scale,
@@ -84,7 +84,7 @@ def get_distance(A, B):
 
 
 def load_tables():
-    with open(os.path.join(__SOURCES, "tables.json"), "r") as f_i:
+    with open(os.path.join(__SOURCES, "assets/tables.json"), "r") as f_i:
         tables = json.loads(f_i.read())
     return tables
 
