@@ -9,7 +9,7 @@ services:
     container_name: galatableplacer_app
     restart: always
     volumes:
-      - ./src:/app/
+      - ./src:/app/ema-galatableplacer/src
     ports:
       - ${APP_PORT}:8501
     networks:

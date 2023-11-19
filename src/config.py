@@ -1,1 +1,1 @@
-__SOURCES = ""
+__SOURCES = "/app/ema-galatableplacer/src"
