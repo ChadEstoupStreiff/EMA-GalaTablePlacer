@@ -7,8 +7,45 @@ This application predict a good enought table placement to satisfy those require
 ## 📚 How to use
 
 ### [Visit this website to use this app](https://ema-galatableplacer.streamlit.app/)  
-In writing...
 
+1. ### Upload your excel file.  
+Upload your file on the left.  
+![File upload](assets/upload_file.png)  
+
+2. ### Edit your data.  
+You get some metrics of the data in the center.  
+You can live edit data by double clicking and editing the value you want to update.  
+![Data edit](assets/edit_data.png)  
+
+3. ### Lauch the algorithm.
+On the sidebar on the left you have a formular where you can edit some parameters.  
+- **Size of table**: maximum size of the table.
+- **Equaly split overfilled tables**: If checked an overfilled table will be splitted in equally size tables, for exemple a table of size 12 will create 2 tables of 6 people. If not checked the table will be splitted in one big table and one small table, for exemple a table of size 12 will create 1 table of 10 people and 1 table of 2 people.  
+- **Number of solution to try**: The more it get, the better the result will be be the longer the run time will be.  
+
+Click on the button calculate table placement.  
+Wait for the algorithm to do the work.  
+![Algo form](assets/algo_form.png)
+
+4. ### Explore your result.
+
+You'll get a result image that shows table placement and number of each table.
+![Result](assets/result.jpg)
+
+You'll get some metrics of the result.
+![Result](assets/result_metrics.png)
+
+You can search information on a person or a table.
+![Result](assets/result_search.png)
+
+- ### Bonus: Save result.  
+
+**You can save the result and reload it without uploading the excel data or running the algorihtme again.**
+Save the result by clicking download save on the sidebad on the lef.  
+![Save download](assets/download_save.png)
+
+Upload and load the result by opening save slider on top left and uploading the downloaded save file.  
+![Load save](assets/load_save.png)
 
 ## ⚙️ How it works
 1. ### Preprocessing data
