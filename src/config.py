@@ -1,1 +1,1 @@
-__SOURCES = "/src"
+__SOURCES = ""

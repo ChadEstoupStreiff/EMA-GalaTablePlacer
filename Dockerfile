@@ -16,5 +16,6 @@ RUN pip install -r /requirements.txt
 COPY src /app
 
 # START
+WORKDIR /app
 ENTRYPOINT ["streamlit", "run"]
-CMD ["/app/main.py"]
+CMD ["main.py"]
