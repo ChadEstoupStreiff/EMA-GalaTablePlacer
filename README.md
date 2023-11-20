@@ -1,6 +1,6 @@
 # EMA-GalaTablePlacer
 
-This application predict a good enought table placement to satisfy those requirements:  
+This application predict a good enough table placement to satisfy those requirements:  
 - Codes should be automaticaly modified by pre processing algortihme.
 - Each table should be as close as possible to the friend table.  
 
@@ -10,6 +10,7 @@ This application predict a good enought table placement to satisfy those require
 
 1. ### Upload your excel file.  
 Upload your file on the left.  
+[**You can find an exemple here (anonymized).**](assets/Tests_tables_.xlsx)  
 ![File upload](assets/upload_file.png)  
 
 2. ### Edit your data.  
